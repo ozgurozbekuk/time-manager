@@ -1,4 +1,5 @@
 import React from 'react'
+import { Paperclip,Rocket, ChartNetwork,Brain,NotebookPen,CalendarClock } from "lucide-react";
 
 const Info = () => {
   return (
@@ -10,23 +11,23 @@ const Info = () => {
       </div>
 
       {/* Ana İçerik - İki Bölümlü Grid */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto'>
         
         {/* Sol Bölüm */}
-        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'> {/* hover efekti eklendi */}
+        <div className='bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:scale-105 transition-all duration-300'> {/* hover efekti eklendi */}
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Task Flow</h2>
           <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
-              <span className='mr-2'>🎯</span>
-              Pomodoro Tekniği ile Odaklanma
+            <Brain className='w-5 h-5 mr-2'/>
+              Focus your task.
             </li>
             <li className='flex items-center'>
-              <span className='mr-2'>📝</span>
-              Görev Yönetimi
+            <NotebookPen className='w-5 h-5 mr-2'/>
+              Stay organized.
             </li>
             <li className='flex items-center'>
-              <span className='mr-2'>⏱️</span>
-              Zaman Takibi
+                <Paperclip className='w-5 h-5 mr-2'/>
+              Drag, drop, and get things done.
             </li>
           </ul>
         </div>
@@ -34,22 +35,22 @@ const Info = () => {
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Time Tracker</h2>
           <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
-              <span className='mr-2'>🎯</span>
-              Pomodoro Tekniği ile Odaklanma
+            <CalendarClock className='w-5 h-5 mr-2'/>
+              Track your time.
             </li>
             <li className='flex items-center'>
-              <span className='mr-2'>📝</span>
-              Görev Yönetimi
+              <Rocket className='w-5 h-5 mr-2'/>
+              Boost your productivity.
             </li>
             <li className='flex items-center'>
-              <span className='mr-2'>⏱️</span>
-              Zaman Takibi
+            <ChartNetwork className='w-5 h-5 mr-2'/>
+              Know where your time goes.
             </li>
           </ul>
         </div>
 
         {/* Sağ Bölüm */}
-        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'> {/* hover efekti eklendi */}
+        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'> 
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Pomodoro</h2>
           <div className='space-y-4 text-gray-300'>
             <div className='flex items-center justify-between'>
