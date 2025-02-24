@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@layer base {
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+    }
+
+}
+
+@layer components {
+    .navbar {
+        & button {
+            @apply flex flex-col items-center cursor-pointer absolute transition-all duration-300 ease-in-out hover:scale-105;
+            
+            & svg, & span {
+                @apply transition-colors duration-300;
+            }
+            
+            &:hover {
+                & svg, & span {
+                    @apply text-white;
+                }
+            }
+        }
+    }
+}
