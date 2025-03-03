@@ -3,7 +3,7 @@
     body {
         margin: 0;
         padding: 0;
-        background-color: #000000;
+        background-color: #121c24;
     }
 
 }
@@ -23,5 +23,9 @@
                 }
             }
         }
+    }
+
+    .taskCard {
+        @apply bg-gray-100 h-[85vh] mt-7 rounded-2xl shadow-lg z-40 border-5 border-[#52D3D8]
     }
 }
