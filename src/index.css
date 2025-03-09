@@ -26,6 +26,6 @@
     }
 
     .taskCard {
-        @apply bg-gray-100 h-[85vh] mt-7 rounded-2xl shadow-lg z-40 border-5 border-[#52D3D8]
+        @apply bg-gray-500  h-[85vh] mt-7 rounded-2xl shadow-lg z-40 
     }
 }
