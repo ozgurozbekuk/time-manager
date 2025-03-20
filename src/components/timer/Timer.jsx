@@ -8,6 +8,8 @@ const Timer = () => {
     const [isRunning, setIsRunning] = useState(false)
 
     const [alarms,setAlarms] = useState([])
+    const [alarmSound] = useState(new Audio("./alarm.wav"));
+    const [alarmMessages,setAlarmMessages] = useState([])
 
     useEffect(() => {
         let interval;
@@ -41,8 +43,11 @@ const Timer = () => {
                 const alarmTotalSeconds = (alarm.hours * 3600) + (alarm.minutes * 60);
 
                 if (totalSeconds >= alarmTotalSeconds) {
-                    alert(`Alarm: ${alarm.hours} hour(s) and ${alarm.minutes} minute(s) reached!`);
+                    alarmSound.play()
+                    // alert(`Alarm: ${alarm.hours} hour(s) and ${alarm.minutes} minute(s) reached!`);
+                    setAlarmMessages((prevMessages) => [...prevMessages, `Alarm: ${alarm.hours}:${alarm.minutes}`])
                     setAlarms((prevAlarms) => prevAlarms.filter((a) => a !== alarm)); //remove alarm
+
                 }
             });
         }
@@ -65,7 +70,7 @@ const Timer = () => {
     }
 
     const addAlarm = (time) => {
-        
+            handleStart()
             setAlarms((prevAlarms) => [...prevAlarms, time]);
         
     }
@@ -73,6 +78,12 @@ const Timer = () => {
     const deleteAlarm = (index) => {
         const newAlarms = alarms.filter((alarm,i) => i != index)
         setAlarms(newAlarms)
+    }
+
+    const stopSoundAndRemoveMessage = (messageId) => {
+        alarmSound.pause()
+        alarmSound.currentTime = 0 
+        setAlarmMessages((prevMessages) => prevMessages.filter((message) =>message.id !== messageId))
     }
 
   return (
@@ -95,34 +106,52 @@ const Timer = () => {
         </div>
         <div className="bg-gray-800 col-span-1 border border-gray-500 mx-auto my-10 rounded-lg flex flex-col items-center justify-start w-full h-[80vh]">
             <div>
-                <h1 className='text-3xl text-white font-bold justify-start my-5'>Alarm</h1><hr/>
-                <div className="flex justify-around mt-4 gap-4">
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded-lg"
-            onClick={()=>addAlarm({ hours: 0, minutes: 0.1 })}
-          >
-            15 Min
-          </button>
-          <button
-            className="px-4 py-2 bg-yellow-500 text-white rounded-lg"
-            onClick={()=>addAlarm({ hours: 0, minutes: 30 })}
-          >
-            30 Min
-          </button>
-          <button
-            className="px-4 py-2 bg-red-500 text-white rounded-lg"
-            onClick={()=>addAlarm({ hours: 1, minutes: 0 })}
-          >
-            1 Hour
-          </button>
-        </div>
-        <div className="mt-6 text-white">
+                <h1 className='text-3xl text-white font-bold my-4 text-center'>Alarm</h1><hr/>
+                <div className="flex justify-around mt-4 gap-4 text-white font-bold">
+                <button
+                    className='border border-gray-500 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'
+                    onClick={()=>addAlarm({ hours: 0, minutes: 5 })}
+                >
+                    5 Min
+                </button>
+                <button
+                    className='border border-gray-500 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'
+                    onClick={()=>addAlarm({ hours: 0, minutes: 15 })}
+                >
+                    15 Min
+                </button>
+                <button
+                    className='border border-gray-500 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'
+                    onClick={()=>addAlarm({ hours: 0, minutes: 30 })}
+                >
+                    30 Min
+                </button>
+                <button
+                    className='border border-gray-500 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'
+                    onClick={()=>addAlarm({ hours: 1, minutes: 0 })}
+                >
+                    1 Hour
+                </button>
+            </div>
+                <div className="mt-6 text-white">
                     <ul className="list-disc pl-5">
                         {alarms.map((alarm, index) => (
-                            <li key={index}>
-                                {formatTime(alarm.hours)}:{formatTime(alarm.minutes)} - Alarm
+                            <li className='flex justify-between' key={index}>
+                                <span>{formatTime(alarm.hours)}:{formatTime(alarm.minutes)} - Alarm</span>
                                 <button className="text-black-800 cursor-pointer hover:text-black-400" onClick={() => deleteAlarm(index)} >
                                     <DeleteIcon className='text-red-400' />
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="mt-6 text-white">
+                    <ul className="list-disc pl-5">
+                        {alarmMessages.map((message, index) => (
+                            <li key={index}>
+                                <span className='mr-10'>{message}</span>
+                                <button className='border border-gray-500 px-3 py-1 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black' onClick={() => stopSoundAndRemoveMessage(message.id)}>
+                                    Stop
                                 </button>
                             </li>
                         ))}

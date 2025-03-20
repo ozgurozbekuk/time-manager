@@ -10,9 +10,7 @@ const Info = () => {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto'>
-        
-        
-        <div className='bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:scale-105 transition-all duration-300'>
+        <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Task Flow</h2>
           <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
@@ -29,7 +27,7 @@ const Info = () => {
             </li>
           </ul>
         </div>
-        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'>
+        <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Time Tracker</h2>
           <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
@@ -47,8 +45,8 @@ const Info = () => {
           </ul>
         </div>
 
-        {/* Sağ Bölüm */}
-        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'> 
+        
+        <div className='infoCard'> 
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Pomodoro</h2>
           <div className='space-y-4 text-gray-300'>
             <div className='flex items-center justify-between'>
@@ -65,7 +63,7 @@ const Info = () => {
             </div>
           </div>
         </div>
-        <div className='bg-gray-800/50 rounded-xl p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300'> {/* hover efekti eklendi */}
+        <div className='infoCard'> 
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Timer</h2>
           <div className='space-y-4 text-gray-300'>
             <div className='flex items-center justify-between'>

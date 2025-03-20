@@ -10,8 +10,8 @@ function App() {
     <>
     <div className='w-full h-screen m-0 p-0'>
       {/* <Home/> */}
-      {/* <TaskFlow/>  */}
-      <Timer/>
+      <TaskFlow/> 
+      {/* <Timer/> */}
     </div>
       
     </>

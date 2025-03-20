@@ -70,17 +70,10 @@ const getPriorityColor = (priority) => {
                 </div>
                 
                 <ul className="ml-3 w-full mt-5 ">
-                    {/* <li className="grid grid-cols-[3fr_70px_70px_70px] font-semibold border-b pb-2 mb-2 text-left">
-                      <span>Task</span>
-                      <span>Date</span>
-                      <span>Priority</span>
-                      <span>Action</span>
-                    </li> */}
-
                     {/* Task List */}
                     {newTask.map((task, index) => (
                       <li 
-                        className="grid grid-cols-[3fr_70px_70px_50px] mr-10 justify-start border-b py-3 cursor-pointer"
+                        className="grid grid-cols-[3fr_70px_70px_50px] mr-10 mt-3 justify-start rounded-lg border p-2 cursor-pointer hover:cursor-grab"
                         key={index}
                       >
                         <p className="truncate">{task.text}</p>
