@@ -65,6 +65,12 @@ const TaskFlow = () => {
     );
   }
 
+  // const updateTaskPriority = (taskId,newPriority) => {
+  //     setTasks((prevTasks) =>
+  //     prevTasks.map((task) => task.id === taskId ? {...task,priority: newPriority} : task ))
+      
+  // }
+
 
   return (
     <div className="p-8">
@@ -77,6 +83,7 @@ const TaskFlow = () => {
                 column={column}
                 tasks={tasks.filter((task) => task.status === column.id)}
                 showInput={column.id === 'TODO'} 
+                // updateTaskPriority={updateTaskPriority}
               />
             );
           })}
