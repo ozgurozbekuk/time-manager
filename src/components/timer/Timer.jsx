@@ -136,7 +136,7 @@ const Timer = () => {
                 <div className="mt-6 text-white">
                     <ul className="list-disc pl-5">
                         {alarms.map((alarm, index) => (
-                            <li className='flex justify-between' key={index}>
+                            <li className='flex justify-between border border-gray-500  px-3 py-1 rounded-lg mt-3 font-bold' key={index}>
                                 <span>{formatTime(alarm.hours)}:{formatTime(alarm.minutes)} - Alarm</span>
                                 <button className="text-black-800 cursor-pointer hover:text-black-400" onClick={() => deleteAlarm(index)} >
                                     <DeleteIcon className='text-red-400' />

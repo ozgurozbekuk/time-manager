@@ -4,7 +4,23 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { TaskAlt } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 
-const TaskCard = ({ task}) => {
+
+const getPriorityColor = (priority) => {
+  switch (priority) {
+    case 'low':
+      return 'bg-green-500';
+    case 'mid':
+      return 'bg-yellow-500';
+    case 'high':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-500';
+  }
+};
+
+
+
+const TaskCard = ({ task,deleteTask}) => {
     
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -23,27 +39,25 @@ const TaskCard = ({ task}) => {
     
 
   return (
+    <div className="flex flex-col  rounded-lg bg-neutral-700 p-4 shadow-sm hover:shadow-md z-500"
+    style={style}>
     <div
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="flex flex-col cursor-grab rounded-lg bg-neutral-700 p-4 shadow-sm hover:shadow-md z-500"
-      style={style}
+      className='cursor-grab'
     >
       <h3 className="font-medium text-neutral-100">{task.title}</h3>
-      <p className="mt-2 text-sm text-neutral-400">{task.description}</p>
-      <div className='flex justify-between items-center'>
-      <div className='flex gap-1 items-center justify-center mt-2'>
-          <span className='w-[20px] h-[20px] rounded-full bg-red-500 '></span>
-          <span className='w-[15px] h-[15px]  rounded-full bg-red-500 '></span>
-          <span className='w-[10px] h-[10px]  rounded-full bg-red-500 '></span>
-          <span className='w-[5px] h-[5px]  rounded-full bg-red-500 '></span>
-        </div>
-        <div className='flex gap-2'>
-        <EditIcon className='text-white mt-2 cursor-pointer hover:opacity-50 disabled:from-grayscale-700 disabled:to-grayscale-700 disabled:text-white disabled:opacity-50'/>
-        <DeleteIcon className='text-white mt-2 cursor-pointer hover:opacity-50 disabled:from-grayscale-700 disabled:to-grayscale-700 disabled:text-white disabled:opacity-50'/>
+      <p className="mt-2 text-sm text-neutral-400">{task.description ? task.description : 'No description'}</p>
+      </div>
+      <div className="flex justify-between items-center mt-2">
+        <div className={`w-4 h-4 rounded-full ${getPriorityColor(task.priority)}`}></div>
+        <div className="flex gap-2">
+          <EditIcon className="text-white cursor-pointer hover:opacity-50" />
+          <DeleteIcon className="text-white cursor-pointer hover:opacity-50" onClick={() => deleteTask(task.id)} style={{ pointerEvents: isDragging ? 'none' : 'auto' }}/>
         </div>
       </div>
+    
     </div>
   )
 }

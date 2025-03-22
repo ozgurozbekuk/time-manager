@@ -9,41 +9,20 @@ const COLUMNS = [
 ];
 
 const INITIAL_TASKS = [
-  {
-    id: '1',
-    title: 'Research Project',
-    description: 'Gather requirements and create initial documentation',
-    status: 'TODO',
-    priority: 'low',
-  },
-  {
-    id: '2',
-    title: 'Design System',
-    description: 'Create component library and design tokens',
-    status: 'TODO',
-    priority: 'low',
-  },
-  {
-    id: '3',
-    title: 'API Integration',
-    description: 'Implement REST API endpoints',
-    status: 'IN_PROGRESS',
-    priority: 'low',
-  },
-  {
-    id: '4',
-    title: 'Testing',
-    description: 'Write unit tests for core functionality',
-    status: 'DONE',
-    priority: 'low',
-  },
+  
 ];
 
 const TaskFlow = () => {
 
   const [tasks, setTasks] = useState(INITIAL_TASKS);
 
+  const addTask = (newTask) => {
+    setTasks((prevTasks) => [...prevTasks,newTask])
+  }
 
+  const deleteTask = (taskId) => {
+    setTasks((prevTasks) =>prevTasks.filter((task) => task.id !== taskId))
+  }
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -74,6 +53,7 @@ const TaskFlow = () => {
 
   return (
     <div className="p-8">
+      <h1 className='text-white font-bold text-center text-3xl'>Task Flow</h1>
       <div className="flex gap-8 items-center justify-center">
         <DndContext onDragEnd={handleDragEnd} >
           {COLUMNS.map((column) => {
@@ -81,6 +61,8 @@ const TaskFlow = () => {
               <Columns
                 key={column.id}
                 column={column}
+                addTask={addTask}
+                deleteTask={deleteTask}
                 tasks={tasks.filter((task) => task.status === column.id)}
                 showInput={column.id === 'TODO'} 
                 // updateTaskPriority={updateTaskPriority}
