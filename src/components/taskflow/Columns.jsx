@@ -6,7 +6,7 @@ import { AddTask } from '@mui/icons-material';
 
 
 
-export function Columns({ column, tasks,showInput,addTask,deleteTask }) {
+export function Columns({ column, tasks,showInput,addTask,deleteTask,updateTask }) {
   const [title,setTitle] = useState("");
   const [desc,setDesc] = useState("");
   const [priority, setPriority] = useState("low");
@@ -60,7 +60,7 @@ export function Columns({ column, tasks,showInput,addTask,deleteTask }) {
       }
       <div ref={setNodeRef} className="flex flex-1 overflow-y-auto flex-col gap-4">
         {tasks.map((task) => {
-          return <TaskCard key={task.id} task={task} deleteTask={deleteTask}/>;
+          return <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask}/>;
         })}
       </div>
     </div>

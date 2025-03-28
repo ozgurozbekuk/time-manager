@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { TaskAlt } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
-
 
 const getPriorityColor = (priority) => {
   switch (priority) {
@@ -18,48 +16,92 @@ const getPriorityColor = (priority) => {
   }
 };
 
+const TaskCard = ({ task, deleteTask, updateTask }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const [editedDesc, setEditedDesc] = useState(task.description || '');
+  const [editedPriority, setEditedPriority] = useState(task.priority);
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    disabled: isEditing, // Düzenleme modundayken sürüklemeyi devre dışı bırak
+  });
 
-const TaskCard = ({ task,deleteTask}) => {
-    
+  const style = transform
+    ? {
+        transform: `translate(${transform.x}px, ${transform.y}px)`,
+        position: isDragging ? 'fixed' : 'relative',
+        zIndex: isDragging ? 1000 : 'auto',
+      }
+    : undefined;
 
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-        id: task.id,
-      });
-
-      const style = transform
-      ? {
-          transform: `translate(${transform.x}px, ${transform.y}px)`,
-          position: isDragging ? 'fixed' : 'relative',
-              zIndex: isDragging ? 1000 : 'auto',
-        }
-      : undefined;
-    
-
-    
+  const handleSave = () => {
+    updateTask(task.id, {
+      title: editedTitle,
+      description: editedDesc.trim() === '' ? 'No description' : editedDesc,
+      priority: editedPriority,
+    });
+    setIsEditing(false);
+  };
 
   return (
-    <div className="flex flex-col  rounded-lg bg-neutral-700 p-4 shadow-sm hover:shadow-md z-500"
-    style={style}>
-    <div
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      className='cursor-grab'
-    >
-      <h3 className="font-medium text-neutral-100">{task.title}</h3>
-      <p className="mt-2 text-sm text-neutral-400">{task.description ? task.description : 'No description'}</p>
-      </div>
-      <div className="flex justify-between items-center mt-2">
-        <div className={`w-4 h-4 rounded-full ${getPriorityColor(task.priority)}`}></div>
-        <div className="flex gap-2">
-          <EditIcon className="text-white cursor-pointer hover:opacity-50" />
-          <DeleteIcon className="text-white cursor-pointer hover:opacity-50" onClick={() => deleteTask(task.id)} style={{ pointerEvents: isDragging ? 'none' : 'auto' }}/>
-        </div>
-      </div>
-    
-    </div>
-  )
-}
+    <div className="flex flex-col rounded-lg bg-neutral-700 p-4 shadow-sm hover:shadow-md"
+      style={style}>
 
-export default TaskCard
+     
+      {!isEditing && (
+        <div ref={setNodeRef} {...listeners} {...attributes} className="cursor-grab">
+          <h3 className="font-medium text-neutral-100">{task.title}</h3>
+          <p className="mt-2 text-sm text-neutral-400">{task.description || 'No description'}</p>
+        </div>
+      )}
+
+    
+      {isEditing && (
+        <div className="mt-2">
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            className="w-full p-2 text-black"
+          />
+          <textarea
+            value={editedDesc}
+            onChange={(e) => setEditedDesc(e.target.value)}
+            className="w-full p-2 mt-2 text-black"
+          />
+          <select 
+            value={editedPriority} 
+            onChange={(e) => setEditedPriority(e.target.value)} 
+            className="w-full p-2 mt-2 text-black">
+            <option value="low">Low</option>
+            <option value="mid">Mid</option>
+            <option value="high">High</option>
+          </select>
+          <button onClick={handleSave} className="mt-2 bg-blue-500 cursor-pointer px-4 py-2 rounded text-white">
+            Save
+          </button>
+          <button onClick={() => setIsEditing(false)} className="mt-2 ml-2 cursor-pointer bg-gray-500 px-4 py-2 rounded text-white">
+            Cancel
+          </button>
+        </div>
+      )}
+
+      
+      {!isEditing && (
+        <div className="flex justify-between items-center mt-2">
+          <div className={`w-4 h-4 rounded-full ${getPriorityColor(task.priority)}`}></div>
+          <div className="flex gap-2">
+            <EditIcon className="text-white cursor-pointer hover:opacity-50" 
+              onClick={() => setIsEditing(true)} />
+            <DeleteIcon className="text-white cursor-pointer hover:opacity-50"
+              onClick={() => deleteTask(task.id)}
+              style={{ pointerEvents: isDragging ? 'none' : 'auto' }} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TaskCard;

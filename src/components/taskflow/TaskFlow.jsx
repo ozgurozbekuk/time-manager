@@ -24,6 +24,10 @@ const TaskFlow = () => {
     setTasks((prevTasks) =>prevTasks.filter((task) => task.id !== taskId))
   }
 
+  const updateTask = (taskId,updatedTask) => {
+      setTasks((prevTasks) => prevTasks.map((task) => (task.id === taskId ? { ...task, ...updatedTask } : task)))
+  }
+
   function handleDragEnd(event) {
     const { active, over } = event;
 
@@ -63,6 +67,7 @@ const TaskFlow = () => {
                 column={column}
                 addTask={addTask}
                 deleteTask={deleteTask}
+                updateTask = {updateTask}
                 tasks={tasks.filter((task) => task.status === column.id)}
                 showInput={column.id === 'TODO'} 
                 // updateTaskPriority={updateTaskPriority}
