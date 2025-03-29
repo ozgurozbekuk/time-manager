@@ -63,17 +63,17 @@ const TaskCard = ({ task, deleteTask, updateTask }) => {
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            className="w-full p-2 text-black"
+            className="rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none  focus:border-primary-500"
           />
           <textarea
             value={editedDesc}
             onChange={(e) => setEditedDesc(e.target.value)}
-            className="w-full p-2 mt-2 text-black"
+            className="w-full rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white mt-5 shadow-lg outline-none  focus:border-primary-500"
           />
           <select 
             value={editedPriority} 
             onChange={(e) => setEditedPriority(e.target.value)} 
-            className="w-full p-2 mt-2 text-black">
+            className="w-full mt-2 block w-20 mb-2  rounded-md border-2 border-grayscale-700 bg-grayscale-700 bg-gray-500 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500">
             <option value="low">Low</option>
             <option value="mid">Mid</option>
             <option value="high">High</option>
