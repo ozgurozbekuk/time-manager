@@ -50,16 +50,16 @@ const Info = () => {
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Pomodoro</h2>
           <div className='space-y-4 text-gray-300'>
             <div className='flex items-center justify-between'>
-              <span>Günlük Odaklanma</span>
-              <span className='text-[#52D3D8]'>2 saat 30 dk</span>
+              {/* <span></span>
+              <span className='text-[#52D3D8]'>2 saat 30 dk</span> */}
             </div>
             <div className='flex items-center justify-between'>
-              <span>Tamamlanan Görevler</span>
-              <span className='text-[#52D3D8]'>12</span>
+              {/* <span>Tamamlanan Görevler</span>
+              <span className='text-[#52D3D8]'>12</span> */}
             </div>
             <div className='flex items-center justify-between'>
-              <span>Verimlilik Skoru</span>
-              <span className='text-[#52D3D8]'>85%</span>
+              {/* <span>Verimlilik Skoru</span>
+              <span className='text-[#52D3D8]'>85%</span> */}
             </div>
           </div>
         </div>
@@ -67,16 +67,16 @@ const Info = () => {
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Timer</h2>
           <div className='space-y-4 text-gray-300'>
             <div className='flex items-center justify-between'>
-              <span>Günlük Odaklanma</span>
-              <span className='text-[#52D3D8]'>2 saat 30 dk</span>
+              {/* <span>Günlük Odaklanma</span>
+              <span className='text-[#52D3D8]'>2 saat 30 dk</span> */}
             </div>
             <div className='flex items-center justify-between'>
-              <span>Tamamlanan Görevler</span>
-              <span className='text-[#52D3D8]'>12</span>
+              {/* <span>Tamamlanan Görevler</span>
+              <span className='text-[#52D3D8]'>12</span> */}
             </div>
             <div className='flex items-center justify-between'>
-              <span>Verimlilik Skoru</span>
-              <span className='text-[#52D3D8]'>85%</span>
+              {/* <span>Verimlilik Skoru</span>
+              <span className='text-[#52D3D8]'>85%</span> */}
             </div>
           </div>
         </div>
