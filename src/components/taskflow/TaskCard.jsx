@@ -24,7 +24,7 @@ const TaskCard = ({ task, deleteTask, updateTask }) => {
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: task.id,
-    disabled: isEditing, // Düzenleme modundayken sürüklemeyi devre dışı bırak
+    disabled: isEditing,
   });
 
   const style = transform
