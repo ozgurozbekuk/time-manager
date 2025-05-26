@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import './App.css'
 import Home from './components/home/Home'
@@ -11,8 +12,8 @@ function App() {
     <>
     <div className='w-full h-screen m-0 p-0'>
       {/* <Home/> */}
-      <TaskFlow/> 
-      {/* <Timer/> */}
+      {/* <TaskFlow/>  */}
+      <Timer/>
       {/* <Tracker/> */}
     </div>
       
