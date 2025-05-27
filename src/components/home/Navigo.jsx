@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,20 +15,14 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-12">
-              <a href="#" className="text-white hover:text-[#52D3D8] transition-colors duration-300">
-              Task Flow
-              </a>
-              <a href="#" className="text-white hover:text-[#52D3D8] transition-colors duration-300">
-              Time Tracker
-              </a>
-              <a href="#" className="text-white hover:text-[#52D3D8] transition-colors duration-300">
-                Pomodoro
-              </a>
-              <a href="#" className="text-white hover:text-[#52D3D8] transition-colors duration-300">
-                Timer
-              </a>
-            </div>
+              <ul className="ml-10 flex items-center space-x-12">
+              <li className="text-white hover:text-[#52D3D8] transition-colors duration-300"><Link to="/">Home</Link></li>
+                <li className="text-white hover:text-[#52D3D8] transition-colors duration-300"><Link to="/task">Task Flow</Link></li>
+                <li className="text-white hover:text-[#52D3D8] transition-colors duration-300"><Link to="/tracker">Time Tracker</Link></li>
+                <li className="text-white hover:text-[#52D3D8] transition-colors duration-300"><Link to="/pomodoro">Pomodoro</Link></li>
+                <li className="text-white hover:text-[#52D3D8] transition-colors duration-300"><Link to="/timer">Timer</Link></li>
+              </ul>
+            
           </div>
 
           {/* Profile/Settings Button */}
