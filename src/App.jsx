@@ -7,6 +7,7 @@ import Timer from './components/timer/Timer'
 import Tracker from './components/timetracker/Tracker'
 import Navigo from './components/home/Navigo'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Pomodoro from './components/pomodoro/Pomodoro';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/task" element={<TaskFlow />} />
         <Route path="/tracker" element={<Tracker />} />
         <Route path="/timer" element={<Timer />} />
+        <Route path="/pomodoro" element={<Pomodoro />} />
       </Routes>
     </Router>
     </div>

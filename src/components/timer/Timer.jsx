@@ -87,7 +87,7 @@ const Timer = () => {
     }
 
   return (
-    <div className="grid min-h-screen h-[100vh] grid-cols-3 grid-rows-1">
+    <div className="grid min-h-screen h-[100vh] grid-cols-3 grid-rows-1 mt-5">
         <div className='w-[90%] h-[80vh] col-span-2 px-10 border border-gray-500  my-10 rounded-lg flex flex-col items-center justify-center bg-gray-800'>
             <div className='text-white text-9xl font-bold mb-6'>
                 <span>{formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}</span>
