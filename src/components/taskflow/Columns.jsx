@@ -39,7 +39,7 @@ export function Columns({ column, tasks,showInput,addTask,deleteTask,updateTask 
   // }
 
   return (
-    <div className="flex w-100 flex-col h-[80vh] mt-5 rounded-lg relative bg-gray-800 p-4">
+    <div className="flex w-100 flex-col h-[80vh] mt-5 rounded-lg border border-gray-500 relative bg-gray-800 p-4">
       <h2 className="mb-4 font-semibold text-neutral-100">{column.title}</h2>
       {showInput && 
       <div className='flex items-center justify-center gap-2 mt-2 mb-4'>

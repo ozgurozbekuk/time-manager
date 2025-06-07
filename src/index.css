@@ -54,7 +54,7 @@
     }
 
     .infoCard {
-        @apply bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm hover:scale-105 transition-all duration-300 cursor-pointer
+        @apply bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm border border-gray-500
     }
 }
 
