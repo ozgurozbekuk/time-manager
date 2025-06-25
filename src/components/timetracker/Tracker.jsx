@@ -1,114 +1,86 @@
-import { useState } from "react";
-import React from 'react';
+import React, { useEffect } from 'react'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-export default function Tracker() {
-  const [tasks, setTasks] = useState([]);
-  const [taskName, setTaskName] = useState("");
 
-  const addTask = () => {
-    if (taskName.trim() === "") return;
-    setTasks([
-      ...tasks,
-      {
-        id: Date.now(),
-        name: taskName,
-        timeInSeconds: 0,
-        isRunning: false,
-        startTime: null,
-      },
-    ]);
-    setTaskName("");
-  };
 
-  const startTask = (id) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? { ...task, isRunning: true, startTime: Date.now() }
-          : { ...task, isRunning: false, startTime: null }
-      )
-    );
-  };
+const Tracker = () => {
 
-  const stopTask = (id) => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id === id && task.isRunning) {
-          const now = Date.now();
-          const elapsed = Math.floor((now - task.startTime) / 1000);
-          return {
-            ...task,
-            isRunning: false,
-            timeInSeconds: task.timeInSeconds + elapsed,
-            startTime: null,
-          };
+  const [hours, setHours] = React.useState(0)
+  const [minutes, setMinutes] = React.useState(0)
+  const [seconds, setSeconds] = React.useState(0)
+  const [isRunning, setIsRunning] = React.useState(false);
+  const [textTask, setTextTask] = React.useState(false);
+  const [inputValue,setInputValue] = React.useState("");
+  const [Items, setItems] = React.useState([]);
+  const [startButton, setStartButton] = React.useState(false);
+
+  const formatTime = (time) => String(time).padStart(2, "0");
+
+
+  const handleStart = () => {
+      setTextTask(false);
+      setStartButton(!setStartButton)
+      if(!startButton && inputValue.trim() !== "") {
+      const newTask = {
+          id: Date.now(),
+          name: inputValue,
+          time: `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`,
+        };
+        setItems([...Items, newTask]);
+        setInputValue("");
+  }}
+  useEffect(() => {
+          let interval;
+          if(isRunning) {
+              interval = setInterval(() => {
+                  setSeconds(prevSeconds => {
+                      if(prevSeconds === 59){
+                          setMinutes(prevMinutes => {
+                              if(prevMinutes === 59){
+                                  setHours(prevHours => prevHours + 1)
+                                  return 0;
+                              }
+                              return prevMinutes + 1
+                          })
+                          return 0;
+                      }
+                      return prevSeconds + 1
+                  })
+              },1000)
+          }else {
+              clearInterval(interval)
+          }
+          return () => clearInterval(interval);
+      },[isRunning])
+
+
+      const handleChange = (e) => {
+        const value = e.target.value;
+        setInputValue(value);
+        
+        if(value > 0) {
+          setTextTask(true);
+        }else {
+          setTextTask(false);
         }
-        return task;
-      })
-    );
-  };
 
-  const formatTime = (totalSeconds) => {
-    const hrs = Math.floor(totalSeconds / 3600);
-    const mins = Math.floor((totalSeconds % 3600) / 60);
-    const secs = totalSeconds % 60;
-    return `${hrs.toString().padStart(2, "0")}:${mins
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
+      }
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Task Tracker</h1>
-
-      <div className="flex space-x-2">
-        <input
-          type="text"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
-          placeholder="Yeni görev"
-          className="flex-1 border rounded px-3 py-2"
-        />
-        <button
-          onClick={addTask}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Ekle
-        </button>
+    <div className='text-white border border-gray-500 rounded-lg bg-gray-800 p-5 mt-10  height-full'>
+      <h1 className=' mt-5'>Time Tracker</h1>
+      <div className='flex justify-between items-center mt-5'>
+      <div className='flex items-center gap-3'>
+       <input type="text" value={inputValue} onChange={handleChange} placeholder='Type task...' name="task-name" id="" className='rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none  focus:border-primary-500 ' />
       </div>
-
-      <ul className="space-y-4">
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            className="flex justify-between items-center border p-4 rounded"
-          >
-            <div>
-              <h2 className="font-semibold">{task.name}</h2>
-              <p className="text-sm text-gray-600">
-                Süre: {formatTime(task.timeInSeconds)}
-              </p>
-            </div>
-            <div>
-              {task.isRunning ? (
-                <button
-                  onClick={() => stopTask(task.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                >
-                  Durdur
-                </button>
-              ) : (
-                <button
-                  onClick={() => startTask(task.id)}
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                  Başlat
-                </button>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className='flex items-center gap-5'>
+        <span>{formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}</span>
+        <button disabled={!textTask} className='border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black' onClick={handleStart}>Start</button>
+        <button className='border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'>Manuel</button>
+      </div>
+      </div>
+      
     </div>
-  );
+  )
 }
+export default Tracker
