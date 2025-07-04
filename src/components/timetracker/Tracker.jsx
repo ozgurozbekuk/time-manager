@@ -67,14 +67,14 @@ const Tracker = () => {
       }
 
   return (
-    <div className='text-white border border-gray-500 rounded-lg bg-gray-800 p-5 mt-10  height-full'>
-      <h1 className=' mt-5'>Time Tracker</h1>
+    <div className='text-white border flex flex-col text-center border-gray-500 rounded-lg bg-gray-800 p-5 mt-10 h-full'>
+      <h1 className='font-bold text-3xl mt-5'>Time Tracker</h1>
       <div className='flex justify-between items-center mt-5'>
-      <div className='flex items-center gap-3'>
-       <input type="text" value={inputValue} onChange={handleChange} placeholder='Type task...' name="task-name" id="" className='rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none  focus:border-primary-500 ' />
-      </div>
+        <div className='flex items-center gap-3'>
+          <input type="text" value={inputValue} onChange={handleChange} placeholder='What are you working on?' name="task-name" id="" className='w-[300px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none  focus:border-primary-500 ' />
+        </div>
       <div className='flex items-center gap-5'>
-        <span>{formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}</span>
+        <span className='mr-10'>{formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}</span>
         <button disabled={!textTask} className='border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black' onClick={handleStart}>Start</button>
         <button className='border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black'>Manuel</button>
       </div>

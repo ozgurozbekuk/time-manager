@@ -1,5 +1,6 @@
 import React from 'react'
-import { Paperclip,Rocket, ChartNetwork,Brain,NotebookPen,CalendarClock } from "lucide-react";
+import {TimerOff, AlarmClock,Paperclip,Rocket, ChartNetwork,Brain,NotebookPen,CalendarClock,Focus,Slice,Hourglass } from "lucide-react";
+import { Link } from 'react-router';
 
 const Info = () => {
   return (
@@ -10,6 +11,7 @@ const Info = () => {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto'>
+        <Link to={'/task'}>
         <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Task Flow</h2>
           <ul className='space-y-4 text-gray-300'>
@@ -27,6 +29,8 @@ const Info = () => {
             </li>
           </ul>
         </div>
+        </Link>
+        <Link to={'/tracker'}>
         <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Time Tracker</h2>
           <ul className='space-y-4 text-gray-300'>
@@ -44,43 +48,45 @@ const Info = () => {
             </li>
           </ul>
         </div>
-
-        
+      </Link>
+        <Link to={'/pomodoro'}>
         <div className='infoCard'> 
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Pomodoro</h2>
-          <div className='space-y-4 text-gray-300'>
-            <div className='flex items-center justify-between'>
-              {/* <span></span>
-              <span className='text-[#52D3D8]'>2 saat 30 dk</span> */}
-            </div>
-            <div className='flex items-center justify-between'>
-              {/* <span>Tamamlanan Görevler</span>
-              <span className='text-[#52D3D8]'>12</span> */}
-            </div>
-            <div className='flex items-center justify-between'>
-              {/* <span>Verimlilik Skoru</span>
-              <span className='text-[#52D3D8]'>85%</span> */}
-            </div>
-          </div>
+         <ul className='space-y-4 text-gray-300'>
+            <li className='flex items-center'>
+            <Focus className='w-5 h-5 mr-2'/>
+              Work with focus. Rest with purpose.
+            </li>
+            <li className='flex items-center'>
+              <Slice className='w-5 h-5 mr-2'/>
+              Beat procrastination, one Pomodoro at a time.
+            </li>
+            <li className='flex items-center'>
+            <Hourglass className='w-5 h-5 mr-2'/>
+              Stay sharp for 25, recharge in 5.
+            </li>
+          </ul>
         </div>
+        </Link>
+        <Link to={'/timer'}>
         <div className='infoCard'> 
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Timer</h2>
-          <div className='space-y-4 text-gray-300'>
-            <div className='flex items-center justify-between'>
-              {/* <span>Günlük Odaklanma</span>
-              <span className='text-[#52D3D8]'>2 saat 30 dk</span> */}
-            </div>
-            <div className='flex items-center justify-between'>
-              {/* <span>Tamamlanan Görevler</span>
-              <span className='text-[#52D3D8]'>12</span> */}
-            </div>
-            <div className='flex items-center justify-between'>
-              {/* <span>Verimlilik Skoru</span>
-              <span className='text-[#52D3D8]'>85%</span> */}
-            </div>
-          </div>
+          <ul className='space-y-4 text-gray-300'>
+            <li className='flex items-center'>
+            <AlarmClock className='w-5 h-5 mr-2'/>
+              Set your time. Let it flow. Hear the bell.
+            </li>
+            <li className='flex items-center'>
+              <TimerOff  className='w-5 h-5 mr-2'/>
+              Stay in the zone — stop when it's time.
+            </li>
+            <li className='flex items-center'>
+            <Hourglass className='w-5 h-5 mr-2'/>
+              Time counts up — the alarm keeps you on point.
+            </li>
+          </ul>
         </div>
-
+        </Link>
       </div>
     </div>
   )

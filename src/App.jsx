@@ -18,7 +18,7 @@ function App() {
     <Router> 
       <Navigo/>
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/task" element={<TaskFlow />} />
         <Route path="/tracker" element={<Tracker />} />
         <Route path="/timer" element={<Timer />} />
