@@ -57,7 +57,7 @@ const Pomodoro = () => {
   const breakDuration = options[selectedOption].break / 60;
 
   return (
-    <div className="flex flex-col min-h-screen h-[100vh] items-center mt-10 rounded-lg border border-gray-500  justify-center bg-gray-800 text-white px-4">
+    <div className="flex flex-col min-h-screen h-[100vh] items-center mt-10 rounded-lg mx-auto max-w-5xl border border-gray-500  justify-center bg-gray-800 text-white px-4">
       <h1 className="text-4xl font-bold mb-6">Pomodoro Timer</h1>
       <div className="flex gap-4 mb-6">
         {Object.keys(options).map((opt) => (

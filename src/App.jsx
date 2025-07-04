@@ -8,7 +8,7 @@ import Tracker from './components/timetracker/Tracker'
 import Navigo from './components/home/Navigo'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Pomodoro from './components/pomodoro/Pomodoro';
-
+ 
 
 function App() {
 

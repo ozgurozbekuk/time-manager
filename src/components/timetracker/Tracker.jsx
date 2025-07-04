@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Trash2 } from "lucide-react";
+import { Trash2, CirclePlus } from "lucide-react";
 import {
   saveToLocalStorage,
   getFromLocalStorage,
@@ -16,8 +16,13 @@ const Tracker = () => {
     const stored = localStorage.getItem("taskList");
     return stored ? JSON.parse(stored) : [];
   });
+  const [projectName, setProjectName] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const formatTime = (time) => String(time).padStart(2, "0");
+  const uniqueProjects = [
+    ...new Set(items.map((item) => item.project).filter(Boolean)),
+  ];
 
   const handleStart = () => {
     if (inputValue.trim() === "") return;
@@ -32,9 +37,11 @@ const Tracker = () => {
         time: `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(
           seconds
         )}`,
+        project: projectName,
       };
       setItems((prevItems) => [...prevItems, newTask]);
       setInputValue("");
+      setProjectName("");
     }
 
     setIsRunning(false);
@@ -82,19 +89,61 @@ const Tracker = () => {
     setInputValue(value);
   };
 
+  const handleSelectProject = (project) => {
+    setProjectName(project);
+    setShowDropdown(false);
+  };
+
   return (
-    <div className="text-white border flex flex-col text-center border-gray-500 rounded-lg bg-gray-800 p-5 mt-10 h-full max-w-5xl mx-auto">
+    <div className="text-white border flex flex-col text-center border-gray-500 rounded-lg bg-gray-800 p-5 mt-10 h-full max-w-7xl mx-auto">
       <h1 className="font-bold text-3xl mt-5">Time Tracker</h1>
-      <div className="flex flex-col md:flex-row justify-between items-center mt-5 gap-4 md:gap-0">
-        <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+      <div className="flex  md:flex-row justify-between items-center mt-5 gap-4 md:gap-0">
+        <div className="flex flex-col md:flex-row items-center gap-5 w-full md:w-auto">
           <input
             type="text"
             value={inputValue}
             onChange={handleChange}
             placeholder="What are you working on?"
             name="task-name"
-            className="w-full md:w-[300px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+            className="w-full md:w-[400px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
           />
+          <div>
+          <input
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            placeholder="Project Name"
+            name="project-name"
+            className="w-full md:w-[200px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+          />
+          {showDropdown && (
+            <ul className="absolute z-10 bg-white border w-full md:w-[200px] max-h-40 overflow-auto rounded shadow-lg  text-black">
+              {uniqueProjects
+                .filter((project) =>
+                  project.toLowerCase().includes(projectName.toLowerCase())
+                )
+                .map((project, idx) => (
+                  <li
+                    key={idx}
+                    onClick={() => handleSelectProject(project)}
+                    className="cursor-pointer px-3 py-2 hover:bg-gray-200"
+                  >
+                    {project}
+                  </li>
+                ))}
+              {projectName.trim() &&
+                !uniqueProjects.includes(projectName.trim()) && (
+                  <li
+                    onClick={() => setShowDropdown(false)} // sadece kapatsın
+                    className="cursor-pointer px-3 py-2 text-blue-600 hover:bg-gray-200"
+                  >
+                    Add "{projectName}"
+                  </li>
+                )}
+            </ul>
+          )}
         </div>
         <div className="flex flex-col md:flex-row items-center gap-3 md:gap-5 w-full md:w-auto">
           <span className="font-bold mr-0 md:mr-3 text-lg md:text-xl">
@@ -115,6 +164,8 @@ const Tracker = () => {
               Stop
             </button>
           )}
+            
+          </div>
           <button className="border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black w-full md:w-auto">
             Manuel
           </button>
@@ -127,6 +178,9 @@ const Tracker = () => {
               <div className="flex justify-between items-center border border-gray-500 p-2 rounded-lg">
                 <h3 className="font-bold truncate max-w-[70vw] md:max-w-xs">
                   - {item.name}
+                </h3>
+                <h3 className="font-bold truncate max-w-[70vw] md:max-w-xs">
+                  - {item.project}
                 </h3>
                 <div className="flex items-center gap-6 md:gap-10">
                   <span className="text-lg">{item.time}</span>

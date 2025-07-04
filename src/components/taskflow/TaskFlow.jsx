@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Columns } from './Columns';
 import {DndContext} from '@dnd-kit/core';
+import {saveToLocalStorage,getFromLocalStorage} from '../../utils/localStorage'
+
 
 const COLUMNS = [
   { id: 'TODO', title: 'To Do' },
@@ -48,6 +50,10 @@ const TaskFlow = () => {
     );
   }
 
+
+  useEffect(() => {
+      saveToLocalStorage("taskList2", INITIAL_TASKS);
+    }, [INITIAL_TASKS]);
   // const updateTaskPriority = (taskId,newPriority) => {
   //     setTasks((prevTasks) =>
   //     prevTasks.map((task) => task.id === taskId ? {...task,priority: newPriority} : task ))
