@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 const Info = () => {
   return (
     <div className='min-h-screen p-8 relative z-0 mt-5'> 
-      <div className='text-center mb-12'>
+      <div className='text-center mb-8'>
         <h1 className='text-4xl font-bold text-white mb-4'>Save Your Time</h1>
         <p className='text-gray-300 text-lg'>Stay productive with one app.</p>
       </div>
