@@ -8,6 +8,7 @@ import Tracker from './components/timetracker/Tracker'
 import Navigo from './components/home/Navigo'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Pomodoro from './components/pomodoro/Pomodoro';
+import ScrollToTop from './components/scrolltotop/ScrollToTop';
  
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <>
     <div className='w-full h-screen m-0 p-0'>
     <Router> 
+      <ScrollToTop/>
       <Navigo/>
       <Routes>
         <Route path="/" element={<Home />} />
