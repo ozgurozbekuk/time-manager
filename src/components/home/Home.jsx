@@ -1,4 +1,3 @@
-import React from 'react'
 import Info from './Info'
 import Navigo from './Navigo'
 

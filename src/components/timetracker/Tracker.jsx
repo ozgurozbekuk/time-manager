@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Trash2, CirclePlus } from "lucide-react";
-import {
-  saveToLocalStorage,
-  getFromLocalStorage,
-} from "../../utils/localStorage.js";
+import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
+import { saveToLocalStorage } from "../../utils/localStorage.js";
 
 const Tracker = () => {
   const [hours, setHours] = useState(0);
@@ -143,7 +139,7 @@ const Tracker = () => {
                       onClick={() => setShowDropdown(false)} // sadece kapatsın
                       className="cursor-pointer px-3 py-2 text-blue-600 hover:bg-gray-200"
                     >
-                      Add "{projectName}"
+                      Add &quot;{projectName}&quot;
                     </li>
                   )}
               </ul>

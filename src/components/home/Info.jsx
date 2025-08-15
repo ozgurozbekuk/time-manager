@@ -1,10 +1,9 @@
-import React from 'react'
-import {TimerOff, AlarmClock,Paperclip,Rocket, ChartNetwork,Brain,NotebookPen,CalendarClock,Focus,Slice,Hourglass } from "lucide-react";
-import { Link } from 'react-router';
+import {TimerOff, AlarmClock, Paperclip, Rocket, ChartNetwork, Brain, NotebookPen, CalendarClock, Focus, Slice, Hourglass} from "lucide-react";
+import { Link } from 'react-router-dom';
 
 const Info = () => {
   return (
-    <div className='min-h-screen p-8 relative z-0 mt-5'> 
+    <div className='min-h-screen p-8 relative z-0 mt-5'>
       <div className='text-center mb-8'>
         <h1 className='text-4xl font-bold text-white mb-4'>Save Your Time</h1>
         <p className='text-gray-300 text-lg'>Stay productive with one app.</p>
@@ -50,7 +49,7 @@ const Info = () => {
         </div>
       </Link>
         <Link to={'/pomodoro'}>
-        <div className='infoCard'> 
+        <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Pomodoro</h2>
          <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
@@ -69,7 +68,7 @@ const Info = () => {
         </div>
         </Link>
         <Link to={'/timer'}>
-        <div className='infoCard'> 
+        <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Timer</h2>
           <ul className='space-y-4 text-gray-300'>
             <li className='flex items-center'>
@@ -78,7 +77,7 @@ const Info = () => {
             </li>
             <li className='flex items-center'>
               <TimerOff  className='w-5 h-5 mr-2'/>
-              Stay in the zone — stop when it's time.
+              Stay in the zone — stop when it&apos;s time.
             </li>
             <li className='flex items-center'>
             <Hourglass className='w-5 h-5 mr-2'/>

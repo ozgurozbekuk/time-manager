@@ -1,9 +1,8 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
 import { useDroppable } from '@dnd-kit/core';
 import TaskCard  from './TaskCard';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useState } from 'react';
-import { AddTask } from '@mui/icons-material';
 
 
 

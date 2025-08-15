@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Columns } from "./Columns";
 import { DndContext } from "@dnd-kit/core";
-import {
-  saveToLocalStorage,
-  getFromLocalStorage,
-} from "../../utils/localStorage";
+import { saveToLocalStorage } from "../../utils/localStorage";
 
 const COLUMNS = [
   { id: "TODO", title: "To Do" },
