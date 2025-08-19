@@ -90,6 +90,30 @@ const Tracker = () => {
     setShowDropdown(false);
   };
 
+  const handleManualAdd = () => {
+    if (inputValue.trim() === "") return;
+
+    const manualHours = prompt("Hours", "0");
+    if (manualHours === null) return;
+    const manualMinutes = prompt("Minutes", "0");
+    if (manualMinutes === null) return;
+    const manualSeconds = prompt("Seconds", "0");
+    if (manualSeconds === null) return;
+
+    const newTask = {
+      id: Date.now(),
+      name: inputValue,
+      time: `${formatTime(parseInt(manualHours, 10) || 0)}:${formatTime(
+        parseInt(manualMinutes, 10) || 0
+      )}:${formatTime(parseInt(manualSeconds, 10) || 0)}`,
+      project: projectName,
+    };
+
+    setItems((prevItems) => [...prevItems, newTask]);
+    setInputValue("");
+    setProjectName("");
+  };
+
   return (
     <div className="text-white border flex flex-col text-center border-gray-500 rounded-lg bg-gray-800 p-5 mt-10 h-full max-w-7xl mx-auto">
       <h1 className="font-bold text-3xl mt-5">Time Tracker</h1>
@@ -165,7 +189,10 @@ const Tracker = () => {
               </button>
             )}
           </div>
-          <button className="border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black w-full md:w-auto">
+          <button
+            onClick={handleManualAdd}
+            className="border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black w-full md:w-auto"
+          >
             Manual
           </button>
         </div>
