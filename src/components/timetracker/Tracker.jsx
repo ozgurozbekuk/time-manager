@@ -14,6 +14,10 @@ const Tracker = () => {
   });
   const [projectName, setProjectName] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showManualInputs, setShowManualInputs] = useState(false);
+  const [manualHours, setManualHours] = useState("");
+  const [manualMinutes, setManualMinutes] = useState("");
+  const [manualSeconds, setManualSeconds] = useState("");
 
   const formatTime = (time) => String(time).padStart(2, "0");
   const uniqueProjects = [
@@ -49,7 +53,6 @@ const Tracker = () => {
   const handleRemoveTask = (getId) => {
     let newList = items.filter((item) => item.id !== getId);
     setItems(newList);
-    console.log(items);
   };
 
   useEffect(() => {
@@ -90,23 +93,47 @@ const Tracker = () => {
     setShowDropdown(false);
   };
 
+  const handleManualClick = () => {
+    if (inputValue.trim() === "") return;
+    setShowManualInputs((prev) => !prev);
+  };
+
+  const handleManualAdd = () => {
+    const newTask = {
+      id: Date.now(),
+      name: inputValue,
+      time: `${formatTime(parseInt(manualHours, 10) || 0)}:${formatTime(
+        parseInt(manualMinutes, 10) || 0
+      )}:${formatTime(parseInt(manualSeconds, 10) || 0)}`,
+      project: projectName,
+    };
+
+    setItems((prevItems) => [...prevItems, newTask]);
+    setInputValue("");
+    setProjectName("");
+    setManualHours("");
+    setManualMinutes("");
+    setManualSeconds("");
+    setShowManualInputs(false);
+  };
+
   return (
     <div className="text-white border flex flex-col text-center border-gray-500 rounded-lg bg-gray-800 p-5 mt-10 h-full max-w-7xl mx-auto">
       <h1 className="font-bold text-3xl mt-5">Time Tracker</h1>
-      <div className="flex  md:flex-row justify-between items-center mt-5 gap-4 md:gap-0">
+      <div className="flex flex-col md:flex-row justify-between items-center mt-5 gap-4 md:gap-0">
         <div className="flex flex-col md:flex-row items-center gap-5 w-full md:w-auto">
           <div className="flex flex-col gap-2">
-          <h2>Task Name</h2>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleChange}
-            placeholder="What are you working on?"
-            name="task-name"
-            className="w-full md:w-[400px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
-          />
+            <h2>Task Name</h2>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleChange}
+              placeholder="What are you working on?"
+              name="task-name"
+              className="w-full md:w-[400px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+            />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 relative">
             <h2>Project Name</h2>
             <input
               type="text"
@@ -119,7 +146,7 @@ const Tracker = () => {
               className="w-full md:w-[200px] rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
             />
             {showDropdown && (
-              <ul className="absolute z-10 bg-white border w-full md:w-[200px] max-h-40 overflow-auto rounded shadow-lg  text-black">
+              <ul className="absolute top-full left-0 z-10 bg-white border w-full md:w-[200px] max-h-40 overflow-auto rounded shadow-lg text-black">
                 {uniqueProjects
                   .filter((project) =>
                     project.toLowerCase().includes(projectName.toLowerCase())
@@ -165,23 +192,59 @@ const Tracker = () => {
               </button>
             )}
           </div>
-          <button className="border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black w-full md:w-auto">
-            Manuel
-          </button>
+          <div className="flex flex-col gap-2 w-full md:w-auto">
+            <button
+              onClick={handleManualClick}
+              className="border border-gray-500 px-6 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black w-full md:w-auto"
+            >
+              Manual
+            </button>
+            {showManualInputs && (
+              <div className="flex items-center gap-2 mt-2">
+                <input
+                  type="number"
+                  value={manualHours}
+                  onChange={(e) => setManualHours(e.target.value)}
+                  placeholder="HH"
+                  className="w-16 rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  value={manualMinutes}
+                  onChange={(e) => setManualMinutes(e.target.value)}
+                  placeholder="MM"
+                  className="w-16 rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+                />
+                <span>:</span>
+                <input
+                  type="number"
+                  value={manualSeconds}
+                  onChange={(e) => setManualSeconds(e.target.value)}
+                  placeholder="SS"
+                  className="w-16 rounded-md border-2 border-grayscale-700 bg-grayscale-700 px-2 py-1 text-white shadow-lg outline-none focus:border-primary-500"
+                />
+                <button
+                  onClick={handleManualAdd}
+                  className="border border-gray-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-400 hover:text-black"
+                >
+                  Add
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       {items.length > 0 && (
         <ul className="mt-5 text-left px-2 md:px-0 max-h-80 overflow-y-auto">
           {items.map((item) => (
-            <li key={item.id} className="mb-2 flex flex-col">
-              <div className="flex justify-between items-center border border-gray-500 p-2 rounded-lg">
-                <h3 className="font-bold truncate max-w-[70vw] md:max-w-xs">
-                  - {item.name}
-                </h3>
-                <h3 className="font-bold truncate max-w-[70vw] md:max-w-xs">
-                  - {item.project}
-                </h3>
-                <div className="flex items-center gap-6 md:gap-10">
+            <li key={item.id} className="mb-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border border-gray-500 p-2 rounded-lg gap-2">
+                <div className="flex flex-col sm:flex-row sm:gap-4 w-full">
+                  <h3 className="font-bold truncate sm:max-w-xs">- {item.name}</h3>
+                  <h3 className="font-bold truncate sm:max-w-xs">- {item.project}</h3>
+                </div>
+                <div className="flex items-center justify-between sm:justify-end gap-6 sm:gap-10">
                   <span className="text-lg">{item.time}</span>
                   <span>
                     <Trash2
