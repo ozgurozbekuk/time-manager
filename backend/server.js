@@ -5,6 +5,7 @@ import connectDb from "./db/connectMongodb.js"
 import cookieParser from "cookie-parser";
 import taskRouter from "./routes/task.routes.js"
 import userRouter from "./routes/user.routes.js"
+import trackerRouter from "./routes/tracker.routes.js"
 
 dotenv.config()
 const app = express()
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use("/api/auth",authRouter)
 app.use("/api/tasks",taskRouter)
 app.use("/api/user",userRouter)
+app.use("/api/tracker",trackerRouter)
 
 
 
