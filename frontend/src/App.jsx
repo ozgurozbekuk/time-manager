@@ -1,13 +1,11 @@
-import React from 'react';
-import { useState } from 'react'
 import './App.css'
-import Home from './components/home/Home'
-import TaskFlow from './components/taskflow/TaskFlow'
-import Timer from './components/timer/Timer'
-import Tracker from './components/timetracker/Tracker'
-import Navigo from './components/home/Navigo'
+import Home from './pages/home/Home'
+import TaskFlow from './pages/taskflow/TaskFlow'
+import Timer from './pages/timer/Timer'
+import Tracker from './pages/timetracker/Tracker'
+import Navigo from './components/navbar/Navigo'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Pomodoro from './components/pomodoro/Pomodoro';
+import Pomodoro from './pages/pomodoro/Pomodoro';
 import ScrollToTop from './components/scrolltotop/ScrollToTop';
  
 
