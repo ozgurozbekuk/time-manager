@@ -119,6 +119,9 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div className={`md:hidden ${isOpen ? "block" : "hidden"}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-800/80 backdrop-blur-sm">
+        <NavLink to="/" onClick={closeMobile} className="block px-3 py-2 text-white hover:text-[#52D3D8] transition-colors duration-300">
+              Home
+          </NavLink>
           <NavLink to="/task" onClick={closeMobile} className="block px-3 py-2 text-white hover:text-[#52D3D8] transition-colors duration-300">
             Task Flow
           </NavLink>

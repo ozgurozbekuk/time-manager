@@ -1,4 +1,3 @@
-import React from 'react'
 import {TimerOff, AlarmClock,Paperclip,Rocket, ChartNetwork,Brain,NotebookPen,CalendarClock,Focus,Slice,Hourglass } from "lucide-react";
 import { Link } from 'react-router';
 import { useAuthStore } from '../../store/authUser';
@@ -13,7 +12,7 @@ const Info = () => {
         <p className='text-gray-300 text-lg'>Stay productive with one app.</p>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-2xl mx-auto'>
         <Link to={user ? '/task' : "/login"}>
         <div className='infoCard'>
           <h2 className='text-2xl font-semibold text-[#52D3D8] mb-4'>Task Flow</h2>

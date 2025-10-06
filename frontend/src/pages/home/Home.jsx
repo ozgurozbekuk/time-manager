@@ -1,4 +1,3 @@
-import React from 'react'
 import Info from '../../components/info/Info'
 import Navigo from '../../components/navbar/Navigo'
 

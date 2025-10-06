@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Columns } from "./Columns";
 import { DndContext } from "@dnd-kit/core";
 import {
@@ -65,7 +65,7 @@ const TaskFlow = () => {
   return (
     <div className="p-8 mt-5">
       <h1 className="text-white font-bold text-center text-3xl">Task Flow</h1>
-      <div className="flex gap-8 items-center justify-center">
+      <div className="flex grid grid-cols-1 md:grid-cols-3 items-center justify-around gap-8">
         <DndContext onDragEnd={handleDragEnd}>
           {COLUMNS.map((column) => {
             return (
