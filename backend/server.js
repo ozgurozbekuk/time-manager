@@ -19,15 +19,30 @@ const CLIENT_BUILD_PATH = path.resolve(__dirname, "../frontend/dist");
 const isProduction = process.env.NODE_ENV === "production";
 const port = process.env.PORT || 5000;
 
-const allowedOrigins = (process.env.CORS_ORIGIN || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
+const normalizeOrigin = (value = "") => value.trim().replace(/\/$/, "");
+
+const defaultAllowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://minutly.netlify.app",
+];
+
+const allowedOrigins = [
+  ...new Set([
+    ...defaultAllowedOrigins,
+    ...((process.env.CORS_ORIGIN || "")
+      .split(",")
+      .map(normalizeOrigin)
+      .filter(Boolean)),
+  ]),
+];
 
 const corsOptions = {
   origin(origin, cb) {
     if (!origin) return cb(null, true);
-    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin);
+
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(normalizedOrigin)) {
       return cb(null, true);
     }
     return cb(new Error("Not allowed by CORS"));
