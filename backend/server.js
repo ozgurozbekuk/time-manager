@@ -19,15 +19,33 @@ const CLIENT_BUILD_PATH = path.resolve(__dirname, "../frontend/dist");
 const isProduction = process.env.NODE_ENV === "production";
 const port = process.env.PORT || 5000;
 
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const corsOptions = {
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      return cb(null, true);
+    }
+    return cb(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+// Preflight'lar için:
+app.options("*", cors(corsOptions));
+
 // middleware
 app.use(express.json()); // parse req.body
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(cookieParser());
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : true,
-  credentials: true,
-}));
 
 
 // routes
