@@ -25,8 +25,8 @@ app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(cookieParser());
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || '*',
-  credentials: true
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : true,
+  credentials: true,
 }));
 
 
@@ -42,10 +42,12 @@ app.get("/health", (_req, res) => {
 
 if (isProduction) {
   app.use(express.static(CLIENT_BUILD_PATH));
-  app.get('/*', (_req, res) => {
-    res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
+
+  app.get(/^\/(?!api).*/, (_req, res) => {
+    res.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
   });
 }
+
 
 const startServer = async () => {
   try {
