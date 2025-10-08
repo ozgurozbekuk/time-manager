@@ -38,8 +38,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// Preflight'lar için:
-app.options(/^\/.*/, cors()); 
+// Mirror main CORS options for preflight requests so credentials/origin headers match.
+app.options(/^\/.*/, cors(corsOptions)); 
 
 // middleware
 app.use(express.json()); // parse req.body
