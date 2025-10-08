@@ -42,7 +42,7 @@ app.get("/health", (_req, res) => {
 
 if (isProduction) {
   app.use(express.static(CLIENT_BUILD_PATH));
-  app.get("*", (_req, res) => {
+  app.get('/*', (_req, res) => {
     res.sendFile(path.join(CLIENT_BUILD_PATH, "index.html"));
   });
 }
