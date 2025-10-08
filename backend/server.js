@@ -8,7 +8,8 @@ import userRouter from "./routes/user.routes.js";
 import trackerRouter from "./routes/tracker.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors"
+import cors from "cors";
+import fs from "fs";
 
 dotenv.config();
 const app = express();
@@ -16,7 +17,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const CLIENT_BUILD_PATH = path.resolve(__dirname, "../frontend/dist");
-const isProduction = process.env.NODE_ENV === "production";
+const clientIndexPath = path.join(CLIENT_BUILD_PATH, "index.html");
+const shouldServeClient = fs.existsSync(clientIndexPath);
 const port = process.env.PORT || 5000;
 
 const normalizeOrigin = (value = "") => value.trim().replace(/\/$/, "");
@@ -73,11 +75,11 @@ app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-if (isProduction) {
+if (shouldServeClient) {
   app.use(express.static(CLIENT_BUILD_PATH));
 
   app.get(/^\/(?!api).*/, (_req, res) => {
-    res.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+    res.sendFile(clientIndexPath);
   });
 }
 

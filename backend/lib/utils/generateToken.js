@@ -5,10 +5,14 @@ export const generateTokenAndSetCookie = (userId, res) => {
     expiresIn: "15d",
   });
 
+  const fifteenDaysInMs = 15 * 24 * 60 * 60 * 1000;
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("jwt", token, {
-    maxAge: 15 * 24 * 60 * 1000,
+    maxAge: fifteenDaysInMs,
     httpOnly: true,
-    sameSite: "strict", // CSRF attacks cross-site request forgery attacks
-    secure: process.env.NODE_ENV !== "development",
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    path: "/",
   });
 };
