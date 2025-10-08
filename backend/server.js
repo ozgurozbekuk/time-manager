@@ -23,6 +23,12 @@ app.use(express.json()); // parse req.body
 app.use(express.urlencoded({ extended: true })); // parse form data
 app.use(cookieParser());
 
+app.use(cors({
+  origin: process.env.CORS_ORIGIN?.split(',') || '*',
+  credentials: true
+}));
+
+
 // routes
 app.use("/api/auth", authRouter);
 app.use("/api/tasks", taskRouter);
