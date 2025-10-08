@@ -39,7 +39,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // Preflight'lar için:
-app.options("*", cors(corsOptions));
+app.options(/^\/.*/, cors()); 
 
 // middleware
 app.use(express.json()); // parse req.body
