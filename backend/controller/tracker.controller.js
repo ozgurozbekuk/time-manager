@@ -1,6 +1,24 @@
 
 import Tracker from "../models/tracker.model.js";
 
+export const getTrackerTasks = async (req, res) => {
+    try {
+        const userId = req.user?._id;
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const tasks = await Tracker.find({ user: userId })
+            .sort({ isRunning: -1, start: -1 })
+            .lean();
+
+        res.status(200).json(tasks);
+    } catch (error) {
+        console.log("Fetch tracker tasks error: ", error);
+        res.status(500).json({ error: "Internal server error!" });
+    }
+};
+
 export const startTracker = async (req,res) =>{
     try {
        const userId = req.user._id;

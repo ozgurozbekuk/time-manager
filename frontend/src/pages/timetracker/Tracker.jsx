@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Trash2, CirclePlus, Pencil, Check, X } from "lucide-react";
-import {
-  saveToLocalStorage,
-  getFromLocalStorage,
-} from "../../utils/localStorage.js";
 
-/* ---------- Helpers (English only) ---------- */
+/* ---------- Helpers ---------- */
 const pad = (n) => String(n).padStart(2, "0");
 const formatHMS = (h, m, s) => `${pad(h)}:${pad(m)}:${pad(s)}`;
 const secondsToHMS = (total) => {
@@ -30,6 +27,45 @@ const normalizeTimeInput = (t) => {
   if (Number.isNaN(secs)) return "";
   return secondsToHMS(secs);
 };
+const mapTrackerTask = (task) => {
+  const source = task?.source ?? (task?.manual ? "manual" : "timer");
+  return {
+    id: task?._id ?? task?.id ?? Date.now(),
+    name: task?.taskName ?? task?.name ?? "",
+    project: task?.projectName ?? task?.project ?? "",
+    start: task?.start ?? null,
+    end: task?.end ?? null,
+    durationSec:
+      typeof task?.durationSec === "number" ? task.durationSec : null,
+    isRunning: Boolean(task?.isRunning),
+    source,
+    manual: source === "manual",
+  };
+};
+const computeDurationSec = (item) => {
+  if (!item) return 0;
+  if (item.isRunning && item.start) {
+    const diffMs = Date.now() - new Date(item.start).getTime();
+    return Math.max(0, Math.floor(diffMs / 1000));
+  }
+  if (typeof item.durationSec === "number") return Math.max(0, item.durationSec);
+  if (item.start && item.end) {
+    const diffMs = new Date(item.end).getTime() - new Date(item.start).getTime();
+    return Math.max(0, Math.floor(diffMs / 1000));
+  }
+  return 0;
+};
+const formatManualRange = (start, end) => {
+  if (!start || !end) return "";
+  const opts = { hour: "2-digit", minute: "2-digit" };
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+    return "";
+  }
+  return `${startDate.toLocaleTimeString([], opts)}–${endDate.toLocaleTimeString([], opts)}`;
+};
+const DEFAULT_PROJECT_NAME = "General";
 
 const Tracker = () => {
   /* Timer */
@@ -43,11 +79,9 @@ const Tracker = () => {
   const [projectName, setProjectName] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  /* Items + storage */
-  const [items, setItems] = useState(() => {
-    const stored = getFromLocalStorage("taskList");
-    return Array.isArray(stored) ? stored : [];
-  });
+  /* Items */
+  const [items, setItems] = useState([]);
+  const [activeTaskId, setActiveTaskId] = useState(null);
 
   /* Inline edit */
   const [editingId, setEditingId] = useState(null);
@@ -67,6 +101,31 @@ const Tracker = () => {
     () => [...new Set(items.map((i) => i.project).filter(Boolean))],
     [items]
   );
+
+  const resetTimer = () => {
+    setHours(0);
+    setMinutes(0);
+    setSeconds(0);
+  };
+
+  const syncTimerFromStart = (startIso) => {
+    if (!startIso) {
+      resetTimer();
+      return;
+    }
+    const startDate = new Date(startIso);
+    if (Number.isNaN(startDate.getTime())) {
+      resetTimer();
+      return;
+    }
+    const diffSec = Math.max(
+      0,
+      Math.floor((Date.now() - startDate.getTime()) / 1000)
+    );
+    setHours(Math.floor(diffSec / 3600));
+    setMinutes(Math.floor((diffSec % 3600) / 60));
+    setSeconds(diffSec % 60);
+  };
 
   /* Tick */
   useEffect(() => {
@@ -91,70 +150,168 @@ const Tracker = () => {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  /* Persist list */
+  /* Fetch tasks */
   useEffect(() => {
-    saveToLocalStorage("taskList", items);
-  }, [items]);
+    const controller = new AbortController();
+    const loadTasks = async () => {
+      try {
+        const { data } = await axios.get("/api/tracker", {
+          signal: controller.signal,
+        });
+        const mapped = Array.isArray(data) ? data.map(mapTrackerTask) : [];
+        setItems(mapped);
+        const running = mapped.find((task) => task.isRunning);
+        if (running) {
+          setActiveTaskId(running.id);
+          setIsRunning(true);
+          syncTimerFromStart(running.start);
+          setInputValue(running.name);
+          setProjectName(running.project);
+        } else {
+          setActiveTaskId(null);
+          setIsRunning(false);
+          resetTimer();
+        }
+      } catch (error) {
+        if (error?.code === "ERR_CANCELED") return;
+        toast.error(
+          error?.response?.data?.error ?? "Failed to load tracker entries."
+        );
+      }
+    };
+    loadTasks();
+    return () => controller.abort();
+  }, []);
 
   /* Start/Stop */
-  const handleStart = () => {
-    if (!inputValue.trim())
-      return toast.error(manualError || "Please enter a task name.");
-    setIsRunning(true);
+  const handleStart = async () => {
+    if (!inputValue.trim()) {
+      toast.error("Please enter a task name.");
+      return;
+    }
+    if (activeTaskId) {
+      toast.error("A task is already running.");
+      return;
+    }
+    try {
+      const payload = {
+        taskName: inputValue.trim(),
+        projectName: projectName.trim() || DEFAULT_PROJECT_NAME,
+      };
+      const { data } = await axios.post("/api/tracker/start", payload);
+      const newTask = mapTrackerTask(data);
+      setItems((prev) => [
+        newTask,
+        ...prev.filter((item) => item.id !== newTask.id),
+      ]);
+      setActiveTaskId(newTask.id);
+      setIsRunning(true);
+      syncTimerFromStart(newTask.start);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ?? "Failed to start tracker task."
+      );
+    }
   };
 
-  const handleStop = () => {
-    if (inputValue.trim()) {
-      const newTask = {
-        id: Date.now(),
-        name: inputValue.trim(),
-        project: projectName.trim(),
-        time: formatHMS(hours, minutes, seconds),
-      };
-      setItems((prev) => [newTask, ...prev]);
+  const handleStop = async () => {
+    if (!activeTaskId) {
+      toast.error("No running task to stop.");
+      return;
+    }
+    try {
+      const { data } = await axios.patch(
+        `/api/tracker/stop/${activeTaskId}`
+      );
+      const updated = mapTrackerTask(data);
+      setItems((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item))
+      );
+      setIsRunning(false);
+      setActiveTaskId(null);
+      resetTimer();
       setInputValue("");
       setProjectName("");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ?? "Failed to stop tracker task."
+      );
     }
-    setIsRunning(false);
-    setHours(0);
-    setMinutes(0);
-    setSeconds(0);
   };
 
   /* List actions */
-  const handleRemoveTask = (id) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+  const handleRemoveTask = async (id) => {
+    try {
+      await axios.delete(`/api/tracker/delete/${id}`);
+      setItems((prev) => prev.filter((i) => i.id !== id));
+      if (id === activeTaskId) {
+        setActiveTaskId(null);
+        setIsRunning(false);
+        resetTimer();
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ?? "Failed to delete tracker task."
+      );
+    }
   };
 
   const handleEditStart = (item) => {
     setEditingId(item.id);
     setEditName(item.name || "");
     setEditProject(item.project || "");
-    setEditTime(item.time || "00:00:00");
+    setEditTime(secondsToHMS(computeDurationSec(item)));
   };
 
-  const handleEditSave = (id) => {
+  const handleEditSave = async (id) => {
     const norm = normalizeTimeInput(editTime);
     if (!norm) {
-      // simple guard; you can also show a toast
+      toast.error("Please enter time as HH:MM or HH:MM:SS.");
       return;
     }
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === id
-          ? {
-              ...i,
-              name: editName.trim(),
-              project: editProject.trim(),
-              time: norm,
-            }
-          : i
-      )
-    );
-    setEditingId(null);
-    setEditName("");
-    setEditProject("");
-    setEditTime("");
+    const item = items.find((i) => i.id === id);
+    if (!item) return;
+
+    const durationSec = timeStrToSeconds(norm);
+    const startDate = item.start ? new Date(item.start) : new Date();
+    const endDate = new Date(startDate.getTime() + durationSec * 1000);
+
+    const finalName =
+      editName.trim() ||
+      (typeof item.name === "string" ? item.name.trim() : "");
+    if (!finalName) {
+      toast.error("Task name cannot be empty.");
+      return;
+    }
+    const finalProject =
+      editProject.trim() ||
+      (typeof item.project === "string" ? item.project.trim() : "") ||
+      DEFAULT_PROJECT_NAME;
+
+    try {
+      const payload = {
+        taskName: finalName,
+        projectName: finalProject,
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+      };
+      const { data } = await axios.patch(
+        `/api/tracker/update/${id}`,
+        payload
+      );
+      const updated = mapTrackerTask(data);
+      setItems((prev) =>
+        prev.map((i) => (i.id === updated.id ? updated : i))
+      );
+      setEditingId(null);
+      setEditName("");
+      setEditProject("");
+      setEditTime("");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.error ?? "Failed to update tracker task."
+      );
+    }
   };
 
   const handleEditCancel = () => {
@@ -180,7 +337,8 @@ const Tracker = () => {
   };
   const closeManual = () => setIsManualOpen(false);
 
-  const handleManualAdd = () => {
+  const handleManualAdd = async () => {
+    setManualError("");
     const name = manualName.trim();
     if (!name) {
       setManualError("Please enter a task name.");
@@ -188,27 +346,54 @@ const Tracker = () => {
     }
     const startSec = timeStrToSeconds(manualStart);
     const endSec = timeStrToSeconds(manualEnd);
-    if (isNaN(startSec) || isNaN(endSec)) {
+    if (Number.isNaN(startSec) || Number.isNaN(endSec)) {
       setManualError("Start/End must be in HH:MM format (e.g., 09:30).");
       return;
     }
     let duration = endSec - startSec;
-    if (duration < 0) duration += 24 * 3600; // cross-midnight support
+    if (duration <= 0) {
+      duration += 24 * 3600; // cross-midnight support
+    }
     if (duration <= 0) {
       setManualError("Duration must be greater than 0.");
       return;
     }
-    const newTask = {
-      id: Date.now(),
-      name,
-      project: manualProject.trim(),
-      time: secondsToHMS(duration),
-      start: manualStart,
-      end: manualEnd,
-      manual: true,
-    };
-    setItems((prev) => [newTask, ...prev]);
-    setIsManualOpen(false);
+
+    const [startHours = 0, startMinutes = 0] = manualStart
+      .split(":")
+      .map((n) => parseInt(n, 10));
+    const [endHours = 0, endMinutes = 0] = manualEnd
+      .split(":")
+      .map((n) => parseInt(n, 10));
+    const startDate = new Date();
+    startDate.setSeconds(0, 0);
+    startDate.setHours(startHours, startMinutes, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setHours(endHours, endMinutes, 0, 0);
+    if (endDate <= startDate) {
+      endDate.setDate(endDate.getDate() + 1);
+    }
+
+    try {
+      const payload = {
+        taskName: name,
+        projectName: manualProject.trim() || DEFAULT_PROJECT_NAME,
+        start: startDate.toISOString(),
+        end: endDate.toISOString(),
+      };
+      const { data } = await axios.post("/api/tracker/manuel", payload);
+      const newTask = mapTrackerTask(data);
+      setItems((prev) => [
+        newTask,
+        ...prev.filter((item) => item.id !== newTask.id),
+      ]);
+      setIsManualOpen(false);
+      setManualError("");
+    } catch (error) {
+      setManualError(
+        error?.response?.data?.error ?? "Failed to add manual tracker entry."
+      );
+    }
   };
 
   return (
@@ -389,7 +574,9 @@ const Tracker = () => {
                         className="w-36 rounded-md border border-gray-600 bg-gray-700 px-2 py-1 text-white outline-none tabular-nums"
                       />
                     ) : (
-                      <span className="text-lg tabular-nums">{item.time}</span>
+                      <span className="text-lg tabular-nums">
+                        {secondsToHMS(computeDurationSec(item))}
+                      </span>
                     )}
                   </div>
 
@@ -440,7 +627,7 @@ const Tracker = () => {
                     <div className="md:col-span-4 text-xs text-gray-300">
                       Added manually{" "}
                       {item.start && item.end
-                        ? `(${item.start}–${item.end})`
+                        ? `(${formatManualRange(item.start, item.end)})`
                         : ""}
                     </div>
                   )}

@@ -51,6 +51,10 @@ export const useAuthStore =create(persist((set) =>({
             set({isLoggedOut:false})
             toast.error(message || "Logged out failed")
         }
+    },
+    mergeUser:(partialUser)=>{
+        set((state)=>({
+            user: state.user ? {...state.user,...partialUser} : partialUser
+        }))
     }
 }),{name:"auth",getStorage: () => localStorage,})) 
-
