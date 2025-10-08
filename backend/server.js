@@ -8,6 +8,7 @@ import userRouter from "./routes/user.routes.js";
 import trackerRouter from "./routes/tracker.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors"
 
 dotenv.config();
 const app = express();
