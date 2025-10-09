@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
-import { useAuthStore } from "../../store/authUser"
+import { useAuthStore } from "../../store/authUser";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -12,7 +14,9 @@ export default function Register() {
   const [localError, setLocalError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const {register,isRegistered} = useAuthStore(); 
+  const {register,isRegistered} = useAuthStore();
+  const navigate = useNavigate();
+ 
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -41,6 +45,7 @@ export default function Register() {
         email: form.email.trim(),
         password: form.password,
       });
+      navigate("/profile")
     } catch (err) {
       setLocalError(err?.message || "Registration failed. Please try again.");
     } finally {
